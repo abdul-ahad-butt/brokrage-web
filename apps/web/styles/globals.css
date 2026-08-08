@@ -1,0 +1,180 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base Styles ─────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-surface-base text-content-primary font-sans;
+    line-height: 1.65;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-content-primary font-semibold tracking-tight;
+    line-height: 1.25;
+  }
+
+  h1 { @apply text-3xl md:text-4xl; }
+  h2 { @apply text-2xl md:text-3xl; }
+  h3 { @apply text-xl md:text-2xl; }
+  h4 { @apply text-lg md:text-xl; }
+
+  p {
+    @apply text-content-secondary;
+  }
+
+  a {
+    @apply text-action hover:text-action-hover transition-colors duration-150;
+  }
+
+  input, select, textarea {
+    @apply rounded-lg border border-surface-border bg-white px-3 py-2 text-sm text-content-primary
+           placeholder-content-muted outline-none transition-all duration-150
+           focus:border-action focus:ring-2 focus:ring-action/20;
+  }
+
+  button {
+    @apply transition-all duration-150;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-surface-muted;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-border rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-content-muted;
+  }
+}
+
+/* ── Component Utilities ─────────────────────────────────────────────────── */
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-action px-4 py-2.5
+           text-sm font-semibold text-white shadow-sm
+           hover:bg-action-hover active:scale-[0.98]
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action focus-visible:ring-offset-2
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-surface-border
+           bg-white px-4 py-2.5 text-sm font-semibold text-content-primary shadow-sm
+           hover:bg-surface-muted active:scale-[0.98]
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action focus-visible:ring-offset-2
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-compliance-inactive px-4 py-2.5
+           text-sm font-semibold text-white shadow-sm
+           hover:bg-rose-600 active:scale-[0.98]
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  /* Card */
+  .card {
+    @apply rounded-card bg-surface-card shadow-card border border-surface-border;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer;
+  }
+
+  /* Form field */
+  .form-field {
+    @apply flex flex-col gap-1.5;
+  }
+
+  .form-label {
+    @apply text-sm font-medium text-content-primary;
+  }
+
+  .form-error {
+    @apply text-xs text-compliance-inactive;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-badge px-2 py-0.5 text-xs font-semibold;
+  }
+
+  .badge-active {
+    @apply badge bg-emerald-50 text-emerald-700;
+  }
+
+  .badge-inactive {
+    @apply badge bg-rose-50 text-rose-700;
+  }
+
+  .badge-pending {
+    @apply badge bg-amber-50 text-amber-700;
+  }
+
+  .badge-neutral {
+    @apply badge bg-slate-100 text-slate-600;
+  }
+
+  /* Table */
+  .data-table {
+    @apply w-full text-sm;
+  }
+
+  .data-table th {
+    @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-content-muted bg-surface-muted;
+  }
+
+  .data-table td {
+    @apply px-4 py-3 text-content-secondary border-t border-surface-border;
+  }
+
+  .data-table tr:hover td {
+    @apply bg-surface-muted/50;
+  }
+
+  /* Page container */
+  .page-container {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Section spacing */
+  .section {
+    @apply py-8 md:py-12;
+  }
+
+  /* Skeleton loader */
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-surface-muted;
+  }
+}

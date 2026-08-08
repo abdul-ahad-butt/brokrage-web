@@ -1,0 +1,186 @@
+// FreightBridge — Prisma Schema (SQLite for local dev, swap to postgresql for production)
+// Enums are emulated as String fields with validated values at the application layer.
+// Json fields are stored as String (JSON-serialized) since SQLite has no native Json type.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(uuid())
+  role         String   // SHIPPER | CARRIER | AGENT_ADMIN
+  email        String   @unique
+  passwordHash String
+  fullName     String
+  companyName  String?
+  phone        String?
+  createdAt    DateTime @default(now())
+
+  // Carrier-specific compliance fields
+  mcNumber            String?
+  dotNumber           String?
+  mcStatus            String?  // ACTIVE | INACTIVE | BROKER | UNKNOWN
+  complianceCheckedAt DateTime?
+  ratingAverage       Float?    @default(0)
+  ratingCount         Int       @default(0)
+
+  loadsPosted  Load[]   @relation("ShipperLoads")
+  bids         Bid[]
+  reviews      Review[] @relation("ReviewsReceived")
+  reviewsGiven Review[] @relation("ReviewsGiven")
+
+  @@index([role])
+  @@index([mcStatus])
+  @@map("users")
+}
+
+model Load {
+  id            String   @id @default(uuid())
+  shipperId     String
+  status        String   // DRAFT | OPEN | BOOKED | IN_TRANSIT | DELIVERED | CANCELLED
+  originAddress String
+  originLat     Float
+  originLng     Float
+  destAddress   String
+  destLat       Float
+  destLng       Float
+  pickupDate    DateTime
+  deliveryDate  DateTime
+  equipmentType String   // FLATBED | REEFER | DRY_VAN | OTHER
+  weightLbs     Float
+  lengthFt      Float
+  widthFt       Float
+  heightFt      Float
+  commodity     String
+  imageUrls     String   @default("[]")  // JSON-encoded array of URLs
+  askingPrice   Float?
+  acceptedBidId String?  @unique
+  createdAt     DateTime @default(now())
+
+  shipper      User          @relation("ShipperLoads", fields: [shipperId], references: [id])
+  bids         Bid[]
+  ledgerEntry  LedgerEntry?
+  podDocuments PodDocument[]
+  reviews      Review[]
+
+  @@index([status])
+  @@index([equipmentType])
+  @@index([shipperId])
+  @@map("loads")
+}
+
+model Bid {
+  id        String   @id @default(uuid())
+  loadId    String
+  carrierId String
+  amount    Float
+  status    String   // PENDING | ACCEPTED | REJECTED | WITHDRAWN
+  message   String?
+  createdAt DateTime @default(now())
+
+  load    Load @relation(fields: [loadId], references: [id])
+  carrier User @relation(fields: [carrierId], references: [id])
+
+  @@index([loadId])
+  @@index([carrierId])
+  @@index([loadId, status])
+  @@map("bids")
+}
+
+model PodDocument {
+  id         String   @id @default(uuid())
+  loadId     String
+  carrierId  String
+  fileUrl    String
+  uploadedAt DateTime @default(now())
+
+  load Load @relation(fields: [loadId], references: [id])
+
+  @@index([loadId])
+  @@map("pod_documents")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  carrierId String
+  shipperId String
+  loadId    String
+  stars     Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  carrier User @relation("ReviewsReceived", fields: [carrierId], references: [id])
+  shipper User @relation("ReviewsGiven", fields: [shipperId], references: [id])
+  load    Load @relation(fields: [loadId], references: [id])
+
+  @@index([carrierId])
+  @@index([loadId])
+  @@map("reviews")
+}
+
+model LedgerEntry {
+  id                  String   @id @default(uuid())
+  loadId              String   @unique
+  shipperInfo         String   // JSON-encoded LedgerShipperInfo
+  carrierInfo         String   // JSON-encoded LedgerCarrierInfo
+  origin              String
+  destination         String
+  commodity           String
+  totalShipperCost    Float
+  carrierPayout       Float
+  platformCommission  Float
+  bookingFeeCharged   Float
+  brokerRoutingStatus String
+  createdAt           DateTime @default(now())
+
+  load Load @relation(fields: [loadId], references: [id])
+
+  @@index([createdAt])
+  @@map("ledger_entries")
+}
+
+/// Append-only audit log — one row per LedgerEntry creation.
+/// Never mutated or deleted after insertion.
+model LedgerAuditLog {
+  id                  String   @id @default(uuid())
+  ledgerEntryId       String
+  loadId              String
+  shipperInfo         String   // JSON-encoded
+  carrierInfo         String   // JSON-encoded
+  origin              String
+  destination         String
+  commodity           String
+  totalShipperCost    Float
+  carrierPayout       Float
+  platformCommission  Float
+  bookingFeeCharged   Float
+  brokerRoutingStatus String
+  snapshotAt          DateTime @default(now())
+
+  @@index([ledgerEntryId])
+  @@index([loadId])
+  @@map("ledger_audit_log")
+}
+
+/// Tracks carriers who attempted to bid while INACTIVE or BROKER status.
+/// Append-only — never deleted.
+model ComplianceFlagLog {
+  id          String   @id @default(uuid())
+  carrierId   String
+  loadId      String
+  mcNumber    String?
+  mcStatus    String   // ACTIVE | INACTIVE | BROKER | UNKNOWN
+  reason      String
+  attemptedAt DateTime @default(now())
+
+  @@index([carrierId])
+  @@index([attemptedAt])
+  @@map("compliance_flag_log")
+}

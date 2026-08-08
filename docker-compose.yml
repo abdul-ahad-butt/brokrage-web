@@ -1,0 +1,64 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: freightbridge-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: freightbridge
+      POSTGRES_PASSWORD: freightbridge_dev
+      POSTGRES_DB: freightbridge
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U freightbridge -d freightbridge"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile.dev
+    container_name: freightbridge-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://freightbridge:freightbridge_dev@postgres:5432/freightbridge
+      JWT_SECRET: super_secret_dev_jwt_key_change_in_production
+      PORT: 3001
+      NODE_ENV: development
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./apps/api:/app
+      - /app/node_modules
+    command: pnpm dev
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile.dev
+    container_name: freightbridge-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NEXT_PUBLIC_BROKER_NAME: "Partner Broker LLC"
+      NEXT_PUBLIC_BROKER_MC: "XXXXXX"
+      NEXT_PUBLIC_BROKER_DOT: "XXXXXXX"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+      - /app/.next
+    command: pnpm dev
+
+volumes:
+  postgres_data:
+    driver: local

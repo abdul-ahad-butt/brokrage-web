@@ -1,0 +1,6 @@
+/**
+ * Placeholder directory marker for shared UI components.
+ * Built out in Phases 5–8.
+ * Components in this directory are used across all portals.
+ */
+export {};
