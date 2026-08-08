@@ -22,6 +22,8 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "@cloudflare/next-on-pages": "^1.13.16",
+    "wrangler": "^3.67.1"
   }
 }
