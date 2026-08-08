@@ -22,6 +22,9 @@
 
   body {
     @apply bg-surface-base text-content-primary font-sans;
+    background-image: radial-gradient(var(--tw-colors-surface-border) 1px, transparent 0);
+    background-size: 24px 24px;
+    background-position: -19px -19px;
     line-height: 1.65;
     min-height: 100dvh;
     display: flex;
@@ -33,7 +36,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-content-primary font-semibold tracking-tight;
+    @apply text-content-primary font-heading font-semibold tracking-tight;
     line-height: 1.25;
   }
 
@@ -51,9 +54,10 @@
   }
 
   input, select, textarea {
-    @apply rounded-lg border border-surface-border bg-white px-3 py-2 text-sm text-content-primary
-           placeholder-content-muted outline-none transition-all duration-150
-           focus:border-action focus:ring-2 focus:ring-action/20;
+    @apply rounded-lg border border-surface-border bg-surface-muted px-3 py-2 text-sm text-content-primary
+           placeholder-content-muted outline-none transition-all duration-200
+           hover:border-content-muted/30
+           focus:bg-white focus:border-action focus:ring-4 focus:ring-action/10;
   }
 
   button {
@@ -81,35 +85,37 @@
   /* Buttons */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-lg bg-action px-4 py-2.5
-           text-sm font-semibold text-white shadow-sm
-           hover:bg-action-hover active:scale-[0.98]
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action focus-visible:ring-offset-2
-           disabled:cursor-not-allowed disabled:opacity-50;
+           text-sm font-semibold text-white shadow-[0_1px_2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)]
+           bg-gradient-to-b from-white/10 to-transparent
+           hover:bg-action-hover hover:from-white/5 active:scale-[0.98]
+           focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-action/30
+           disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100;
   }
 
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 rounded-lg border border-surface-border
-           bg-white px-4 py-2.5 text-sm font-semibold text-content-primary shadow-sm
-           hover:bg-surface-muted active:scale-[0.98]
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action focus-visible:ring-offset-2
-           disabled:cursor-not-allowed disabled:opacity-50;
+           bg-white px-4 py-2.5 text-sm font-medium text-content-primary shadow-sm
+           hover:bg-surface-muted hover:border-content-muted/30 active:scale-[0.98]
+           focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-content-muted/20
+           disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100;
   }
 
   .btn-danger {
     @apply inline-flex items-center justify-center gap-2 rounded-lg bg-compliance-inactive px-4 py-2.5
-           text-sm font-semibold text-white shadow-sm
-           hover:bg-rose-600 active:scale-[0.98]
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2
-           disabled:cursor-not-allowed disabled:opacity-50;
+           text-sm font-semibold text-white shadow-[0_1px_2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)]
+           bg-gradient-to-b from-white/10 to-transparent
+           hover:bg-rose-600 hover:from-white/5 active:scale-[0.98]
+           focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/30
+           disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100;
   }
 
   /* Card */
   .card {
-    @apply rounded-card bg-surface-card shadow-card border border-surface-border;
+    @apply rounded-card bg-surface-card/95 backdrop-blur-xl shadow-card border border-surface-border/60;
   }
 
   .card-hover {
-    @apply card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer;
+    @apply card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 cursor-pointer;
   }
 
   /* Form field */
@@ -159,8 +165,15 @@
     @apply px-4 py-3 text-content-secondary border-t border-surface-border;
   }
 
+  /* Make numbers mono inside tables */
+  .data-table td.is-number,
+  .data-table td[data-type="number"] {
+    font-family: var(--font-mono), monospace;
+    @apply text-[13px] tracking-tight;
+  }
+
   .data-table tr:hover td {
-    @apply bg-surface-muted/50;
+    @apply bg-surface-muted/60 transition-colors duration-150;
   }
 
   /* Page container */

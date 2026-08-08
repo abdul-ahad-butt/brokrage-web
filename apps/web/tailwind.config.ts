@@ -12,25 +12,25 @@ const config: Config = {
       // Use these token names everywhere. Never use raw Tailwind color classes
       // like bg-blue-600 directly — always use the brand tokens below.
       colors: {
-        // Primary brand navy — nav backgrounds, headings
+        // Primary brand slate — nav backgrounds, headings (Industrial Slate)
         navy: {
-          50: "#f0f4ff",
-          100: "#e0e9ff",
-          200: "#c0d3ff",
-          300: "#93b3ff",
-          400: "#6090ff",
-          500: "#3d6fef",
-          600: "#2b53d4",
-          700: "#2240aa",
-          800: "#1a3080",
-          900: "#0f1d52", // primary brand nav background
-          950: "#080e2e",
+          50: "#f8fafc",
+          100: "#f1f5f9",
+          200: "#e2e8f0",
+          300: "#cbd5e1",
+          400: "#94a3b8",
+          500: "#64748b",
+          600: "#475569",
+          700: "#334155",
+          800: "#1e293b",
+          900: "#0f172a", // primary brand nav background
+          950: "#020617",
         },
-        // Action blue — buttons, links, active states
+        // Action blue — buttons, links, active states (Electric Blue)
         action: {
-          DEFAULT: "#2563eb", // blue-600 equivalent
-          hover: "#1d4ed8",
-          light: "#dbeafe",
+          DEFAULT: "#3b82f6", // blue-500
+          hover: "#2563eb",   // blue-600
+          light: "#eff6ff",   // blue-50
         },
         // Compliance status colors
         compliance: {
@@ -42,10 +42,10 @@ const config: Config = {
         },
         // Semantic surface colors
         surface: {
-          base: "#f8fafc",    // slate-50
-          muted: "#f1f5f9",   // slate-100
+          base: "#fafafa",    // ultra-light grey
+          muted: "#f4f4f5",   // zinc-100
           card: "#ffffff",
-          border: "#e2e8f0",  // slate-200
+          border: "#e4e4e7",  // zinc-200
         },
         // Text tokens
         content: {
@@ -57,6 +57,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        heading: ["var(--font-outfit)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "monospace"],
       },
       letterSpacing: {
@@ -71,9 +72,9 @@ const config: Config = {
         badge: "6px",
       },
       boxShadow: {
-        card: "0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05)",
-        "card-hover": "0 4px 16px 0 rgb(0 0 0 / 0.08), 0 2px 6px -2px rgb(0 0 0 / 0.06)",
-        focus: "0 0 0 3px rgba(37, 99, 235, 0.15)",
+        card: "0 8px 32px -4px rgba(0, 0, 0, 0.04), 0 4px 16px -4px rgba(0, 0, 0, 0.04)",
+        "card-hover": "0 12px 48px -4px rgba(0, 0, 0, 0.08), 0 8px 24px -4px rgba(0, 0, 0, 0.06)",
+        focus: "0 0 0 3px rgba(59, 130, 246, 0.15)",
       },
       animation: {
         "fade-in": "fadeIn 0.2s ease-out",

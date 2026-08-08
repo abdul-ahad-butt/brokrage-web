@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Outfit, JetBrains_Mono } from "next/font/google";
 
 import { LegalFooter } from "../components/ui/LegalFooter";
 import "../styles/globals.css";
@@ -7,6 +7,18 @@ import "../styles/globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -30,8 +42,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <body className="flex min-h-dvh flex-col antialiased" suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+      <body className="flex min-h-dvh flex-col antialiased bg-surface-base text-content-primary" suppressHydrationWarning>
         {children}
         {/* LegalFooter is rendered on EVERY page including portals and error pages */}
         <LegalFooter />

@@ -11,7 +11,8 @@
     "build": "pnpm run --recursive build",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write .",
-    "typecheck": "pnpm run --recursive typecheck"
+    "typecheck": "pnpm run --recursive typecheck",
+    "postinstall": "cd apps/api && npx prisma generate"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.18.0",
